@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import ToDoItem from "./ToDoItem"
 
 function App() {
   const [item, updateItem] = useState("")
@@ -8,19 +9,35 @@ function App() {
     updateItem(value)
   }
   function handleSubmit(event) {
-    if (item=="") {
+    if (item == "") {
       document.getElementById("error-message").classList.remove("success-message")
       document.getElementById("error-message").classList.add("error-message")
-      document.getElementById("error-message").innerHTML="Please enter a task first"
-    }else{
-      updateList(prevValue => [ ...prevValue, item])
+      document.getElementById("error-message").innerHTML = "Please enter a task first"
+    } else {
+      updateList(prevValue => [...prevValue, item])
       updateItem("")
       document.getElementById("error-message").classList.remove("error-message")
       document.getElementById("error-message").classList.add("success-message")
-      document.getElementById("error-message").innerHTML="Added"
-    }
-    
+      document.getElementById("error-message").innerHTML = "Added"
+    }}
+
+
+  function deleteItem (id) {
+     updateList(prevArray => {
+      return prevArray.filter((element, index) => {
+        return index!==0;
+      }) 
+    })
   }
+   
+   
+  // function deleteItem(id) {
+  //   updateList(prevArray => {
+  //     return prevArray.filter((item, index)=>{
+  //       return index !==id
+  //     })
+  //   })
+  // }
 
   return (
     <div className="container">
@@ -30,7 +47,7 @@ function App() {
 
       <div className="form">
         <p id="error-message"></p>
-        <input type="text" name="newItem" value={item} onChange = {handleChange} required/>
+        <input type="text" name="newItem" value={item} onChange={handleChange} required />
         <button onClick={handleSubmit}>
           <span>Add</span>
         </button>
@@ -38,8 +55,15 @@ function App() {
 
       <div>
         <ul>
-          {list.map(element =>  <li>{element}</li>)}
+        {list.map((toDoItem, index) => (  <ToDoItem
+            key={index}
+            id={index}
+            toDoItem={toDoItem}
+            onChecked={deleteItem}
+          />))}
+        
         </ul>
+
       </div>
     </div>
   );
